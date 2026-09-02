@@ -119,8 +119,7 @@ def compare(mfccs, eps):
     features_norm = scaler.fit_transform(features) #Normalize
 
     dbscan = DBSCAN(eps=eps, min_samples=1)
-    cluster_labels = dbscan.fit_predict(features_norm) 
-    
+    cluster_labels = dbscan.fit_predict(features_norm)
     return cluster_labels
 
 def cluster_assignment_ui():
@@ -210,12 +209,10 @@ def confirm(assignments, output):
         for note in cluster_midis.get(label):
             temp.append(note)
         midi_labels.append(temp)
-    
     generate_midi(midi_labels, output)
     
     for widget in scroll_frame.winfo_children():
         widget.destroy()
-    
     root.quit()
 
 def generate_midi(midi_labels, output):
@@ -235,18 +232,15 @@ def generate_midi(midi_labels, output):
 
     for onset_time, notes in zip(onset_times, midi_labels):
         current = int(onset_time * tps)
-
         for note in notes:
             events.append((current, 'note_on', note, 100))
             events.append((current + duration, 'note_off', note, 0))
-
     events.sort(key=lambda event: event[0])
-
+    
     previous = 0
     for current, message_type, note, velocity in events:
         dtime = current - previous
-        track.append(mido.Message(message_type, channel=9, note=note, velocity=velocity, time=dtime))
-
+        track.append(mido.Message(message_type, channel=9, note=note, velocity=velocity, time=dtime)
         previous = current
     mid.save(output)
     print(f"MIDI file saved to {output}")
